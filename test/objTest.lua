@@ -1,0 +1,7 @@
+local m=require("sando.mq")
+local json = require("sando.dkjson")
+setmetatable(m,{__index=_G})
+setfenv(1,m)
+EO=obj("test.exampleObj")
+EO:tap("进入战斗")
+EO:call("主页按钮存在")

@@ -22,7 +22,7 @@ function  tap2( x,y )
   local index = math.random(1,5)
   x = x + math.random(-2,2)
   y = y + math.random(-2,2)
-  print("成功判定只有两个数字作为参数",x,y)
+  print("实际点击位置",x,y)
   -- touchDown(index,x, y)
   -- mSleep(math.random(65,85))                --某些特殊情况需要增大延迟才能模拟点击效果
   -- touchUp(index, x, y)
@@ -32,7 +32,7 @@ function  tap2( x,y )
 end
 -- 四个参数的tap，实际点击的点为四个参数确定范围内的随机一个点
 function tap4 (x1,y1,x2,y2)
-  print("四个数作为参数")
+  print("四个数作为参数"..x1.."  "..y1.."  "..x2.."  "..y2)
   -- 调整x1,x2,y1,y2的顺序，x1,y1为左上角坐标，需小于x2,y2
   if x1>x2 or y1>y2 then
     error("提供的坐标有误，x1,y1为左上角坐标，需分别小于x2,y2")
@@ -47,6 +47,35 @@ end
 -- 点击table
 function tapTable(a)
   tap4(a[1],a[2],a[3],a[4])
+end
+-- 避免在obj中tap重名
+function otap(a,b,...)
+  local other={...}
+  local length = #other
+  if type(a)=="number" and type(b)=="number" then
+    if length==0 then
+      tap2(a,b)
+    elseif length==2 then
+      local x1,x2,x3,x4 = a,b,other[1],other[2]
+      if type(x3)=="number" and type(x4)=="number" then
+        tap4(x1,x2,x3,x4)
+      else
+        error("提供四个参数时四个参数都应为数字")
+      end
+    end
+  elseif type(a)=="table" and type(b)=="nil" and length==0 then
+    if #a==4 then
+      tap4(a[1],a[2],a[3],a[4])
+    elseif #a==2 then
+      tap2(a[1],a[2])
+    elseif manyErea(a) then-- 上面已经确认a为table,b为空,只需要传入a
+      tapRandomErea(a)
+    else
+      error("提供的table元素个数有误")
+    end
+  else
+    error("提供的参数有误")
+  end
 end
 -- 检测随机点击多个区域的参数是否正确，正确示例[[20,30,60,90],[80,22,77,55]]
 -- 错误示例：[[20,30,90],[80,22,77,55]]，即：每个区域要由4个点组成，区域不能是单个点

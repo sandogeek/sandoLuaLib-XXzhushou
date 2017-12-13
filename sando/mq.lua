@@ -48,32 +48,30 @@ print=function( ... )
 
 -- 模拟一次点击
 function tap(a,b,...)
-  local other={...}
-  local length = #other
-  if type(a)=="number" and type(b)=="number" then
-    if length==0 then
-      ms.tap2(a,b)
-    elseif length==2 then
-      local x1,x2,x3,x4 = a,b,other[1],other[2]
-      if type(x3)=="number" and type(x4)=="number" then
-        ms.tap4(x1,x2,x3,x4)
+  ms.otap(a,b,...)
+end
+
+-- 把lua文件对象化
+function obj(objName)
+  if type(objName)~="string" then
+    error("参数必须为string")
+  else
+    moudule=require(objName)
+    function moudule:tap(key)
+      -- 支持点击不固定的位置
+      if type(self.obj[key])=="table" then
+        ms.otap(self.obj[key])
+      elseif type(self.obj[key])=="function" then
+        ms.otap(self.obj[key]())
       else
-        error("提供四个参数时四个参数都应为数字")
+        error("参数有误")
       end
     end
-  elseif type(a)=="table" and type(b)=="nil" and length==0 then
-    if #a==4 then
-      ms.tap4(a[1],a[2],a[3],a[4])
-    elseif #a==2 then
-      ms.tap2(a[1],a[2])
-    elseif ms.manyErea(a) then-- 上面已经确认a为table,b为空,只需要传入a
-      ms.tapRandomErea(a)
-    else
-      error("提供的table元素个数有误")
+    function moudule:call(key)
+      self.obj[key]()
     end
-  else
-    error("提供的参数有误")
   end
+  return moudule
 end
 
 function delay(time)

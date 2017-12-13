@@ -2,7 +2,7 @@ local m=require("sando.mq")
 local json = require("sando.dkjson")
 setmetatable(m,{__index=_G})
 setfenv(1,m)
-local cor = {{100,200,350,450},{70,30,60,90},{10,22,77,55}}
+local cor = {{100,200,350,450},{10,30,60,90},{10,22,77,55}}
 -- tap正确调用示例
 -- tap(500,300)
 -- tap(200,300,400,600)\
