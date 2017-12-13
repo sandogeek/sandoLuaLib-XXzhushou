@@ -56,18 +56,18 @@ function tap(a,b,...)
     elseif length==2 then
       local x1,x2,x3,x4 = a,b,other[1],other[2]
       if type(x3)=="number" and type(x4)=="number" then
-        tap4(x1,x2,x3,x4)
+        ms.tap4(x1,x2,x3,x4)
       else
         error("提供四个参数时四个参数都应为数字")
       end
     end
-  elseif type(a)=="table" and type(b)=="string" and length==0 then
-    tap_t_str(a,b)
   elseif type(a)=="table" and type(b)=="nil" and length==0 then
     if #a==4 then
-      tap4(a[1],a[2],a[3],a[4])
+      ms.tap4(a[1],a[2],a[3],a[4])
     elseif #a==2 then
-      tap2(a[1],a[2])
+      ms.tap2(a[1],a[2])
+    elseif ms.manyErea(a) then-- 上面已经确认a为table,b为空,只需要传入a
+      ms.tapRandomErea(a)
     else
       error("提供的table元素个数有误")
     end

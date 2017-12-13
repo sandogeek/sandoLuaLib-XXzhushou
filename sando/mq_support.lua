@@ -32,13 +32,43 @@ function  tap2( x,y )
 end
 -- 四个参数的tap，实际点击的点为四个参数确定范围内的随机一个点
 function tap4 (x1,y1,x2,y2)
-  tap(math.random(x1,x2),math.random(y1,y2))
-end
-local tap_t_str = function (t,str)
-  print("我去，你提供了个表和字符串!")
-  if str=="" then
-    tap4(t[1],t[2],t[3],t[4])
+  print("四个数作为参数")
+  -- 调整x1,x2,y1,y2的顺序，x1,y1为左上角坐标，需小于x2,y2
+  if x1>x2 or y1>y2 then
+    error("提供的坐标有误，x1,y1为左上角坐标，需分别小于x2,y2")
   end
+  math.randomseed(tostring(os.time()):reverse():sub(1, 6))
+  tap2(math.random(x1,x2),math.random(y1,y2))
+  -- print(x1.."  "..x2)
+  -- print(y1.."  "..y2)
+  -- print(math.random(x1,x2))
+  -- print(math.random(y1,y2))
+end
+-- 点击table
+function tapTable(a)
+  tap4(a[1],a[2],a[3],a[4])
+end
+-- 检测随机点击多个区域的参数是否正确，正确示例[[20,30,60,90],[80,22,77,55]]
+-- 错误示例：[[20,30,90],[80,22,77,55]]，即：每个区域要由4个点组成，区域不能是单个点
+function manyErea(a)
+  for _,v in pairs(a) do
+    if #v~=4 then
+      error("表示区域的数字不是4个")
+    else
+      for _,v1 in pairs(v) do
+        if type(v1)~="number" then
+          error("表示区域的4个参数必须是数字")
+        end
+      end
+    end
+  end
+  -- print("参数为多区域")
+  return true
+end
+-- 点击随机区域
+function tapRandomErea(a)
+  math.randomseed(os.time())
+  tapTable(a[math.random(#a)])
 end
 function delay(time)
   if type(time)~="number" then
